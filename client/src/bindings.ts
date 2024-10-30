@@ -20,10 +20,10 @@ interface Position {
 
 enum Direction {
     None = "0",
-    Left = "1",
-    Right = "2",
-    Up = "3",
-    Down = "4",
+    UpLeft = "1",
+    UpRight = "2",
+    DownLeft = "3",
+    DownRight = "4",
 }
 
 interface Vec2 {
