@@ -32,8 +32,6 @@ mod actions {
             // Retrieve the player's current position from the world.
             let position = get!(world, player, (Position));
             // Update the world state with the new data.
-            // 1. Set the player's remaining moves to 100.
-            // 2. Move the player's position 10 units in both the x and y direction.
 
             set!(
                 world,
@@ -76,23 +74,41 @@ mod actions {
 // Define function like this:
 fn next_position(mut position: Position, direction: Direction) -> Position {
     match direction {
-        Direction::None => {},
+        Direction::None => {}, // Sin movimiento
         Direction::UpLeft => {
-            position.vec.x -= 1;
-            position.vec.y -= 1;
+            if position.vec.x > 0 && position.vec.y > 0 {
+                if (position.vec.x - 1 + position.vec.y - 1) % 2 == 0 {
+                    position.vec.x -= 1;
+                    position.vec.y -= 1;
+                }
+            }
         },
         Direction::UpRight => {
-            position.vec.x += 1;
-            position.vec.y -= 1;
+            if position.vec.x < 7 && position.vec.y > 0 {
+                if (position.vec.x + 1 + position.vec.y - 1) % 2 == 0 {
+                    position.vec.x += 1;
+                    position.vec.y -= 1;
+                }
+            }
         },
         Direction::DownLeft => {
-            position.vec.x -= 1;
-            position.vec.y += 1;
+            if position.vec.x > 0 && position.vec.y < 7 {
+                if (position.vec.x - 1 + position.vec.y + 1) % 2 == 0 {
+                    position.vec.x -= 1;
+                    position.vec.y += 1;
+                }
+            }
         },
         Direction::DownRight => {
-            position.vec.x += 1;
-            position.vec.y += 1;
+            if position.vec.x < 7 && position.vec.y < 7 {
+                if (position.vec.x + 1 + position.vec.y + 1) % 2 == 0 {
+                    position.vec.x += 1;
+                    position.vec.y += 1;
+                }
+            }
         },
     };
     position
 }
+
+

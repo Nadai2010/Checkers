@@ -27,9 +27,16 @@ const Board: React.FC<BoardProps> = ({ position, selectedDirection }) => {
                     <div className={`w-8 h-8 rounded-full ${piece === "B" ? "bg-black" : "bg-red-600"}`}></div>
                 )}
                 {/* Resaltar la posición de la pieza seleccionada */}
-                {position && position.vec.x === j && position.vec.y === i && (
-                    <div className="absolute inset-0 border-4 border-blue-400 rounded" />
-                )}
+                {position &&
+                    position.vec.x >= 0 &&
+                    position.vec.x < 8 &&
+                    position.vec.y >= 0 &&
+                    position.vec.y < 8 &&
+                    position.vec.x === j &&
+                    position.vec.y === i && (
+                        <div className="absolute inset-0 border-4 border-orange-500 bg-orange-200 bg-opacity-25 rounded animate-pulse" />
+
+                    )}
             </div>
         );
     };
