@@ -42,7 +42,7 @@ mod actions {
                         player, remaining: 100, last_direction: Direction::None(()), can_move: true
                     },
                     Position {
-                        player, vec: Vec2 { x: position.vec.x + 10, y: position.vec.y + 10 }
+                        player, vec: Vec2 { x: position.vec.x + 0, y: position.vec.y + 0 }
                     },
                 )
             );
@@ -76,11 +76,23 @@ mod actions {
 // Define function like this:
 fn next_position(mut position: Position, direction: Direction) -> Position {
     match direction {
-        Direction::None => { return position; },
-        Direction::Left => { position.vec.x -= 1; },
-        Direction::Right => { position.vec.x += 1; },
-        Direction::Up => { position.vec.y -= 1; },
-        Direction::Down => { position.vec.y += 1; },
+        Direction::None => {},
+        Direction::UpLeft => {
+            position.vec.x -= 1;
+            position.vec.y -= 1;
+        },
+        Direction::UpRight => {
+            position.vec.x += 1;
+            position.vec.y -= 1;
+        },
+        Direction::DownLeft => {
+            position.vec.x -= 1;
+            position.vec.y += 1;
+        },
+        Direction::DownRight => {
+            position.vec.x += 1;
+            position.vec.y += 1;
+        },
     };
     position
 }

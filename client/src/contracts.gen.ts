@@ -2,7 +2,7 @@
 // Import the necessary types from the recs SDK
 // generate again with `sozo build --typescript`
 import { DojoProvider } from "@dojoengine/core";
-import { Account, byteArray } from "starknet";
+import { Account } from "starknet";
 
 export type IClient = Awaited<ReturnType<typeof client>>;
 
@@ -38,7 +38,7 @@ export function client(provider: DojoProvider) {
                         contractName: contract_name,
                         entrypoint: "move",
                         calldata: [
-                            ["None", "Left", "Right", "Up", "Down"].indexOf(
+                            ["None", "UpLeft", "UpRight", "DownLeft", "DownRight"].indexOf(
                                 props.direction.type
                             ),
                         ],

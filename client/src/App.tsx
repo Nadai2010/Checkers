@@ -9,7 +9,7 @@ import useModel from "./useModel.tsx";
 import { useSystemCalls } from "./useSystemCalls.ts";
 
 import ControllerButton from "./components/ControllerButton.tsx";
-
+import Board from "./components/Board"; // Asegúrate de que esta importación esté correcta
 
 export const useDojoStore = createDojoStore<Schema>();
 
@@ -133,16 +133,16 @@ function App({ sdk }: { sdk: SDK<Schema> }) {
 
     return (
         <div className="bg-black min-h-screen w-full p-4 sm:p-8">
-        <div className="max-w-7xl mx-auto">
-            <div className="flex gap-2 mb-4"> {/* Contenedor Flex con separación de 2px */}
-                <button
-                    className="px-4 py-2 bg-blue-600 text-white text-sm sm:text-base rounded-md hover:bg-blue-700 transition-colors duration-300"
-                    onClick={() => account?.create()}
-                >
-                    {account?.isDeploying ? "Deploying Burner..." : "Create Burner"}
-                </button>
-                <ControllerButton />
-            </div>
+            <div className="max-w-7xl mx-auto">
+                <div className="flex gap-2 mb-4">
+                    <button
+                        className="px-4 py-2 bg-blue-600 text-white text-sm sm:text-base rounded-md hover:bg-blue-700 transition-colors duration-300"
+                        onClick={() => account?.create()}
+                    >
+                        {account?.isDeploying ? "Deploying Burner..." : "Create Burner"}
+                    </button>
+                    <ControllerButton />
+                </div>
 
                 <div className="bg-gray-800 shadow-md rounded-lg p-4 sm:p-6 mb-6 w-full max-w-md">
                     <div className="text-lg sm:text-xl font-semibold mb-4 text-white">{`Burners Deployed: ${account.count}`}</div>
@@ -204,30 +204,31 @@ function App({ sdk }: { sdk: SDK<Schema> }) {
                         <div className="grid grid-cols-3 gap-2 w-full h-48">
                             {[
                                 {
-                                    direction: "Up" as const,
-                                    label: "↑",
-                                    col: "col-start-2",
-                                },
-                                {
-                                    direction: "Left" as const,
-                                    label: "←",
+                                    direction: "UpLeft" as const,
+                                    label: "↖",
                                     col: "col-start-1",
                                 },
                                 {
-                                    direction: "Right" as const,
-                                    label: "→",
+                                    direction: "UpRight" as const,
+                                    label: "↗",
                                     col: "col-start-3",
                                 },
                                 {
-                                    direction: "Down" as const,
-                                    label: "↓",
-                                    col: "col-start-2",
+                                    direction: "DownLeft" as const,
+                                    label: "↙",
+                                    col: "col-start-1",
+                                },
+                                {
+                                    direction: "DownRight" as const,
+                                    label: "↘",
+                                    col: "col-start-3",
                                 },
                             ].map(({ direction, label, col }) => (
                                 <button
                                     className={`${col} h-12 w-12 bg-gray-600 rounded-full shadow-md active:shadow-inner active:bg-gray-500 focus:outline-none text-2xl font-bold text-gray-200`}
                                     key={direction}
                                     onClick={async () => {
+                                        console.log("Direction:", direction);
                                         await client.actions.move({
                                             account: account.account,
                                             direction: { type: direction },
@@ -241,6 +242,13 @@ function App({ sdk }: { sdk: SDK<Schema> }) {
                     </div>
                 </div>
 
+                {/* Aquí se añade el tablero */}
+                <div className="mt-8">
+                    <Board
+                        position={position ? { vec: { x: position.vec.x, y: position.vec.y } } : null}
+                        selectedDirection={moves?.last_direction ?? null}
+                    />
+                </div>
                 <div className="mt-8 overflow-x-auto">
                     <table className="w-full border-collapse border border-gray-700">
                         <thead>

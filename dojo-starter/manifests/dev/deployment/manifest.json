@@ -1256,8 +1256,8 @@
     {
       "kind": "DojoContract",
       "address": "0x122ca6adae523511fbc9e13250b56ef98cebcb6914acfc5b4095f37d8699bc1",
-      "class_hash": "0x31d69e598e30ac6cf1e090458ac3bddf7c1e181e2fbe74f32f4441d85860522",
-      "original_class_hash": "0x31d69e598e30ac6cf1e090458ac3bddf7c1e181e2fbe74f32f4441d85860522",
+      "class_hash": "0x18bee997ce0ae2bf38e445c505aadaaf552476fdb8b1a508c377a45a78a0a0e",
+      "original_class_hash": "0x18bee997ce0ae2bf38e445c505aadaaf552476fdb8b1a508c377a45a78a0a0e",
       "base_class_hash": "0x2427dd10a58850ac9a5ca6ce04b7771b05330fd18f2e481831ad903b969e6b2",
       "abi": [
         {
@@ -1401,19 +1401,19 @@
               "type": "()"
             },
             {
-              "name": "Left",
+              "name": "UpLeft",
               "type": "()"
             },
             {
-              "name": "Right",
+              "name": "UpRight",
               "type": "()"
             },
             {
-              "name": "Up",
+              "name": "DownLeft",
               "type": "()"
             },
             {
-              "name": "Down",
+              "name": "DownRight",
               "type": "()"
             }
           ]
@@ -1551,8 +1551,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x72c6666cfeebc41544f502cfe9c32ad7b91fce12881709420335794dfcb324a",
-      "original_class_hash": "0x72c6666cfeebc41544f502cfe9c32ad7b91fce12881709420335794dfcb324a",
+      "class_hash": "0x7b5d5dab99f884f5b6652351e69d90c46165686d71fff8631201d2ea78d9fd9",
+      "original_class_hash": "0x7b5d5dab99f884f5b6652351e69d90c46165686d71fff8631201d2ea78d9fd9",
       "abi": [
         {
           "type": "impl",
@@ -1930,19 +1930,19 @@
               "type": "()"
             },
             {
-              "name": "Left",
+              "name": "UpLeft",
               "type": "()"
             },
             {
-              "name": "Right",
+              "name": "UpRight",
               "type": "()"
             },
             {
-              "name": "Up",
+              "name": "DownLeft",
               "type": "()"
             },
             {
-              "name": "Down",
+              "name": "DownRight",
               "type": "()"
             }
           ]
@@ -2004,8 +2004,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x2e06be7cf406eb3161fedf460a47faca68855eb9dad7d505c1b1f1875192ccd",
-      "original_class_hash": "0x2e06be7cf406eb3161fedf460a47faca68855eb9dad7d505c1b1f1875192ccd",
+      "class_hash": "0x45303b12635ea9dbf7550bf002f0bb3af64758c993310a9a32e4d59282bde52",
+      "original_class_hash": "0x45303b12635ea9dbf7550bf002f0bb3af64758c993310a9a32e4d59282bde52",
       "abi": [
         {
           "type": "impl",
@@ -2383,19 +2383,19 @@
               "type": "()"
             },
             {
-              "name": "Left",
+              "name": "UpLeft",
               "type": "()"
             },
             {
-              "name": "Right",
+              "name": "UpRight",
               "type": "()"
             },
             {
-              "name": "Up",
+              "name": "DownLeft",
               "type": "()"
             },
             {
-              "name": "Down",
+              "name": "DownRight",
               "type": "()"
             }
           ]
@@ -2467,8 +2467,8 @@
           "key": false
         }
       ],
-      "class_hash": "0x4eac0db062821cc05485ba088b0bb748de83e901116216da171744dfc5ec6fa",
-      "original_class_hash": "0x4eac0db062821cc05485ba088b0bb748de83e901116216da171744dfc5ec6fa",
+      "class_hash": "0x2b4424c8d49439f5a6da2577f92ed6a14a6b47365ed90119c7750a72c5c7c91",
+      "original_class_hash": "0x2b4424c8d49439f5a6da2577f92ed6a14a6b47365ed90119c7750a72c5c7c91",
       "abi": [
         {
           "type": "impl",
@@ -2846,19 +2846,19 @@
               "type": "()"
             },
             {
-              "name": "Left",
+              "name": "UpLeft",
               "type": "()"
             },
             {
-              "name": "Right",
+              "name": "UpRight",
               "type": "()"
             },
             {
-              "name": "Up",
+              "name": "DownLeft",
               "type": "()"
             },
             {
-              "name": "Down",
+              "name": "DownRight",
               "type": "()"
             }
           ]
