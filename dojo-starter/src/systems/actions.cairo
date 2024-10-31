@@ -92,7 +92,7 @@ pub mod actions {
 // Define function like this:
 fn next_position(mut position: Position, direction: Direction) -> Position {
     match direction {
-        Direction::None => {}, // Sin movimiento
+        Direction::None => {}, 
         Direction::UpLeft => {
             if position.vec.x > 0 && position.vec.y > 0 {
                 if (position.vec.x - 1 + position.vec.y - 1) % 2 == 0 {
