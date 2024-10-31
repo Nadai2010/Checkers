@@ -1,4 +1,3 @@
-use dojo_starter::models::Direction;
 use dojo_starter::models::Piece;
 use dojo_starter::models::Vec2;
 
@@ -15,11 +14,18 @@ trait IActions<T> {
 pub mod actions {
     use super::{IActions, next_position};
     use starknet::{ContractAddress, get_caller_address};
-    use dojo_starter::models::{Piece, Vec2, Moves, Direction, DirectionsAvailable};
+    use dojo_starter::models::{Piece, Vec2};
 
     use dojo::model::{ModelStorage, ModelValueStorage};
     use dojo::event::EventStorage;
 
+    #[derive(Copy, Drop, Serde)]
+    #[dojo::event]
+    pub struct Moved {
+        #[key]
+        pub player: ContractAddress,
+        pub vec2: Vec2,
+    }
 
     #[abi(embed_v0)]
     impl ActionsImpl of IActions<ContractState> {
@@ -29,21 +35,60 @@ pub mod actions {
 
             // Get the address of the current caller, possibly the player's address.
             let player = get_caller_address();
-            // Retrieve the player's current position from the world.
-            //let mut position: Position = world.read_model(player);
 
             // Update the world state with the new data.
 
             // 1. Move the player's position 10 units in both the x and y direction.
-            let piece = Piece { player, vec: Vec2 { x: 1, y: 3 } };
+            let piece01 = Piece {
+                player, vec: Vec2 { x: 0, y: 1 }, is_king: false, is_alive: true
+            };
+            let piece03 = Piece {
+                player, vec: Vec2 { x: 0, y: 3 }, is_king: false, is_alive: true
+            };
+            let piece05 = Piece {
+                player, vec: Vec2 { x: 0, y: 5 }, is_king: false, is_alive: true
+            };
+            let piece07 = Piece {
+                player, vec: Vec2 { x: 0, y: 7 }, is_king: false, is_alive: true
+            };
+            let piece10 = Piece {
+                player, vec: Vec2 { x: 1, y: 0 }, is_king: false, is_alive: true
+            };
+            let piece12 = Piece {
+                player, vec: Vec2 { x: 1, y: 2 }, is_king: false, is_alive: true
+            };
+            let piece14 = Piece {
+                player, vec: Vec2 { x: 1, y: 4 }, is_king: false, is_alive: true
+            };
+            let piece16 = Piece {
+                player, vec: Vec2 { x: 1, y: 6 }, is_king: false, is_alive: true
+            };
+            let piece21 = Piece {
+                player, vec: Vec2 { x: 2, y: 1 }, is_king: false, is_alive: true
+            };
+            let piece23 = Piece {
+                player, vec: Vec2 { x: 2, y: 3 }, is_king: false, is_alive: true
+            };
+            let piece25 = Piece {
+                player, vec: Vec2 { x: 2, y: 5 }, is_king: false, is_alive: true
+            };
+            let piece27 = Piece {
+                player, vec: Vec2 { x: 2, y: 7 }, is_king: false, is_alive: true
+            };
 
             // Write the new position to the world.
-            world.write_model(@piece);
-            // 2. Set the player's remaining moves to 100.
-        //let moves = Moves { player, last_direction: Direction::None(()), can_move: true };
-
-            // Write the new moves to the world.
-        //world.write_model(@moves);
+            world.write_model(@piece01);
+            world.write_model(@piece03);
+            world.write_model(@piece05);
+            world.write_model(@piece07);
+            world.write_model(@piece10);
+            world.write_model(@piece12);
+            world.write_model(@piece14);
+            world.write_model(@piece16);
+            world.write_model(@piece21);
+            world.write_model(@piece23);
+            world.write_model(@piece25);
+            world.write_model(@piece27);
         }
         //
 
@@ -54,10 +99,13 @@ pub mod actions {
             let player = get_caller_address();
 
             // Get the player's current position from the world.
-            let mut piece: Piece = world.read_model(player);
+            let mut piece: Piece = world.read_model((player, coordinates_vec2));
 
             // Check if the piece is in the player's position.
-            piece.vec.x == coordinates_vec2.x && piece.vec.y == coordinates_vec2.y
+            piece.vec.x == coordinates_vec2.x
+                && piece.vec.y == coordinates_vec2.y
+                && piece.is_alive == true
+                && piece.is_king == false
         }
 
         // Implementation of the move function for the ContractState struct.
@@ -69,7 +117,7 @@ pub mod actions {
             let player = get_caller_address();
 
             // Retrieve the player's current position and moves data from the world.
-            let mut piece: Piece = world.read_model(player);
+            let mut piece: Piece = world.read_model((player, coordinates_vec2));
 
             // Calculate the player's next position based on the provided direction.
             let next = next_position(piece, coordinates_vec2);
@@ -77,8 +125,8 @@ pub mod actions {
             // Write the new position to the world.
             world.write_model(@next);
             // Write the new moves to the world.
-        // Emit an event to the world to notify about the player's move.
-        //world.emit_event(@Moved { player });
+            // Emit an event to the world to notify about the player's move.
+            world.emit_event(@Moved { player, vec2: coordinates_vec2 });
         }
     }
 }
@@ -86,6 +134,7 @@ pub mod actions {
 fn next_position(mut piece: Piece, coordinates_vec2: Vec2) -> Piece {
     piece.vec.x = coordinates_vec2.x;
     piece.vec.y = coordinates_vec2.y;
+    piece.is_alive = true;
     return piece;
 }
 
