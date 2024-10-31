@@ -31,7 +31,7 @@ pub mod actions {
     impl ActionsImpl of IActions<ContractState> {
         fn spawn(ref self: ContractState) {
             // Get the default world.
-            let mut world = self.world(@"dojo_starter");
+            let mut world = self.world_default();
 
             // Get the address of the current caller, possibly the player's address.
             let player = get_caller_address();
@@ -40,40 +40,40 @@ pub mod actions {
 
             // Create the pieces for the player. Upper side of the board.
             let piece01 = Piece {
-                player, position: Position { x: 0, y: 1 }, is_king: false, is_alive: true
+                player, position: Position { raw: 0, col: 1 }, is_king: false, is_alive: true
             };
             let piece03 = Piece {
-                player, position: Position { x: 0, y: 3 }, is_king: false, is_alive: true
+                player, position: Position { raw: 0, col: 3 }, is_king: false, is_alive: true
             };
             let piece05 = Piece {
-                player, position: Position { x: 0, y: 5 }, is_king: false, is_alive: true
+                player, position: Position { raw: 0, col: 5 }, is_king: false, is_alive: true
             };
             let piece07 = Piece {
-                player, position: Position { x: 0, y: 7 }, is_king: false, is_alive: true
+                player, position: Position { raw: 0, col: 7 }, is_king: false, is_alive: true
             };
             let piece10 = Piece {
-                player, position: Position { x: 1, y: 0 }, is_king: false, is_alive: true
+                player, position: Position { raw: 1, col: 0 }, is_king: false, is_alive: true
             };
             let piece12 = Piece {
-                player, position: Position { x: 1, y: 2 }, is_king: false, is_alive: true
+                player, position: Position { raw: 1, col: 2 }, is_king: false, is_alive: true
             };
             let piece14 = Piece {
-                player, position: Position { x: 1, y: 4 }, is_king: false, is_alive: true
+                player, position: Position { raw: 1, col: 4 }, is_king: false, is_alive: true
             };
             let piece16 = Piece {
-                player, position: Position { x: 1, y: 6 }, is_king: false, is_alive: true
+                player, position: Position { raw: 1, col: 6 }, is_king: false, is_alive: true
             };
             let piece21 = Piece {
-                player, position: Position { x: 2, y: 1 }, is_king: false, is_alive: true
+                player, position: Position { raw: 2, col: 1 }, is_king: false, is_alive: true
             };
             let piece23 = Piece {
-                player, position: Position { x: 2, y: 3 }, is_king: false, is_alive: true
+                player, position: Position { raw: 2, col: 3 }, is_king: false, is_alive: true
             };
             let piece25 = Piece {
-                player, position: Position { x: 2, y: 5 }, is_king: false, is_alive: true
+                player, position: Position { raw: 2, col: 5 }, is_king: false, is_alive: true
             };
             let piece27 = Piece {
-                player, position: Position { x: 2, y: 7 }, is_king: false, is_alive: true
+                player, position: Position { raw: 2, col: 7 }, is_king: false, is_alive: true
             };
 
             // Write the new position to the world.
@@ -93,26 +93,34 @@ pub mod actions {
         //
 
         fn can_choose_piece(ref self: ContractState, coordinates_position: Position) -> bool {
-            let mut world = self.world(@"dojo_starter");
+            let mut world = self.world_default();
 
             // Get the address of the current caller, possibly the player's address.
             let player = get_caller_address();
 
             // Get the player's piece from the world by its coordinates.
             let piece: Piece = world.read_model((player, coordinates_position));
+            println!("piece: {:?}", piece);
 
             // Check if the piece belongs to the player and is alive.
-            piece.position.x == coordinates_position.x
-                && piece.position.y == coordinates_position.y
-                && piece.is_alive == true
-                && piece.is_king == false
+            let is_valid_piece = piece.position.raw == coordinates_position.raw
+                && piece.position.col == coordinates_position.col
+                && piece.is_alive == true;
+
+            // Only check for valid moves if the piece is valid
+            if is_valid_piece {
+                println!("checking valid moves");
+                self.check_valid_moves(piece)
+            } else {
+                false
+            }
         }
 
         // Implementation of the move function for the ContractState struct.
         fn move_piece(ref self: ContractState, coordinates_position: Position) {
             // Get the address of the current caller, possibly the player's address.
 
-            let mut world = self.world(@"dojo_starter");
+            let mut world = self.world_default();
 
             let player = get_caller_address();
 
@@ -128,11 +136,57 @@ pub mod actions {
             world.emit_event(@Moved { player, position: coordinates_position });
         }
     }
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        // Need a function since byte array can't be const.
+        // We could have a self.world with an other function to init from hash, that can be
+        // constant.
+        fn world_default(self: @ContractState) -> dojo::world::WorldStorage {
+            self.world(@"dojo_starter")
+        }
+
+        // Add world parameter to access game state
+        fn check_valid_moves(self: @ContractState, piece: Piece) -> bool {
+            let world = self.world_default();
+
+            let piece_raw = piece.position.raw;
+            let piece_col = piece.position.col;
+
+            // Only handling non-king pieces for now
+            if !piece.is_king {
+                // Player 1 can only move down (increasing raw)
+                // Make sure we're not at the bottom edge of the board
+                if piece_raw >= 7 {
+                    return false;
+                }
+
+                // Check forward-left diagonal (down-left)
+                if piece_col > 0 {
+                    let target_position = Position { raw: piece_raw + 1, col: piece_col - 1 };
+
+                    // Try to read a piece at the target position
+                    // If no piece exists at this position (i.e., if read_model returns an error),
+                    // then the square is empty and the move is valid
+                    let target_square: Piece = world.read_model((piece.player, target_position));
+                    println!("target_square: {:?}", target_square);
+                    // If the target square is empty, return true
+                    if target_square.is_alive == false {
+                        return true;
+                    }
+                    // If the target square is occupied, return false
+                    return false;
+                }
+            }
+
+            // If it's a king piece (not implemented yet)
+            false
+        }
+    }
 }
 // Todo: Improve this function to check if the new position is valid.
 fn update_piece_position(mut piece: Piece, coordinates_position: Position) -> Piece {
-    piece.position.x = coordinates_position.x;
-    piece.position.y = coordinates_position.y;
+    piece.position.raw = coordinates_position.raw;
+    piece.position.col = coordinates_position.col;
     piece.is_alive = true;
     return piece;
 }

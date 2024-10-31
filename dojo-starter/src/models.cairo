@@ -13,21 +13,21 @@ pub struct Piece {
 
 #[derive(Copy, Drop, Serde, IntrospectPacked, Debug)]
 pub struct Position {
-    pub x: u32,
-    pub y: u32
+    pub raw: u32,
+    pub col: u32
 }
 
 #[generate_trait]
 impl PositionImpl of PositionTrait {
     fn is_zero(self: Position) -> bool {
-        if self.x - self.y == 0 {
+        if self.raw - self.col == 0 {
             return true;
         }
         false
     }
 
     fn is_equal(self: Position, b: Position) -> bool {
-        self.x == b.x && self.y == b.y
+        self.raw == b.raw && self.col == b.col
     }
 }
 // #[cfg(test)]
@@ -45,4 +45,5 @@ impl PositionImpl of PositionTrait {
 //         assert(position.is_equal(Vec2 { x: 420, y: 0 }), 'not equal');
 //     }
 // }
+
 

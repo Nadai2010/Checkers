@@ -39,7 +39,7 @@ mod tests {
         // assert(piece00.vec.x == 0 && piece00.vec.y == 0, 'initial piece wrong');
         // Test write_model_test
 
-        let piece_vec = Position { x: 1, y: 1 };
+        let piece_vec = Position { raw: 1, col: 1 };
         let piece = Piece { player: caller, position: piece_vec, is_king: true, is_alive: true };
 
         world.write_model_test(@piece);
@@ -56,6 +56,32 @@ mod tests {
 
     #[test]
     #[available_gas(30000000)]
+    fn test_can_not_choose_piece() {
+        let caller = starknet::contract_address_const::<0x0>();
+
+        let ndef = namespace_def();
+        let mut world = spawn_test_world([ndef].span());
+
+        let (contract_address, _) = world.dns(@"actions").unwrap();
+        let actions_system = IActionsDispatcher { contract_address };
+
+        actions_system.spawn();
+        let valid_piece_position = Position { raw: 2, col: 1 };
+        let initial_piece_position: Piece = world.read_model((caller, valid_piece_position));
+
+        assert(
+            initial_piece_position.position.raw == 2 && initial_piece_position.position.col == 1,
+            'wrong initial piece'
+        );
+        assert(initial_piece_position.is_king == false, 'wrong initial piece');
+        assert(initial_piece_position.is_alive == true, 'wrong initial piece');
+
+        let invalid_piece_position = Position { raw: 7, col: 7 };
+        let can_choose_piece = actions_system.can_choose_piece(invalid_piece_position);
+        assert(!can_choose_piece, 'should be false');
+    }
+    #[test]
+    #[available_gas(30000000)]
     fn test_can_choose_piece() {
         let caller = starknet::contract_address_const::<0x0>();
 
@@ -66,22 +92,20 @@ mod tests {
         let actions_system = IActionsDispatcher { contract_address };
 
         actions_system.spawn();
-        let valid_piece_position = Position { x: 2, y: 1 };
+        let valid_piece_position = Position { raw: 2, col: 1 };
         let initial_piece_position: Piece = world.read_model((caller, valid_piece_position));
 
         assert(
-            initial_piece_position.position.x == 2 && initial_piece_position.position.y == 1,
+            initial_piece_position.position.raw == 2 && initial_piece_position.position.col == 1,
             'wrong initial piece'
         );
         assert(initial_piece_position.is_king == false, 'wrong initial piece');
         assert(initial_piece_position.is_alive == true, 'wrong initial piece');
 
-        let invalid_piece_position = Position { x: 7, y: 7 };
-        let can_choose_piece = actions_system.can_choose_piece(invalid_piece_position);
-        assert(!can_choose_piece, 'should be false');
+        let can_choose_piece = actions_system.can_choose_piece(valid_piece_position);
+        assert(can_choose_piece, 'should be true');
     }
     #[test]
-    #[available_gas(30000000)]
     fn test_move() {
         let caller = starknet::contract_address_const::<0x0>();
 
@@ -92,11 +116,11 @@ mod tests {
         let actions_system = IActionsDispatcher { contract_address };
 
         actions_system.spawn();
-        let valid_piece_position = Position { x: 2, y: 1 };
+        let valid_piece_position = Position { raw: 2, col: 1 };
         let initial_piece_position: Piece = world.read_model((caller, valid_piece_position));
 
         assert(
-            initial_piece_position.position.x == 2 && initial_piece_position.position.y == 1,
+            initial_piece_position.position.raw == 2 && initial_piece_position.position.col == 1,
             'wrong initial piece'
         );
         assert(initial_piece_position.is_king == false, 'wrong initial piece');
@@ -104,13 +128,13 @@ mod tests {
 
         let can_choose_piece = actions_system.can_choose_piece(valid_piece_position);
         assert(can_choose_piece, 'can_choose_piece failed');
-        let new_coordinates_position = Position { x: 3, y: 2 };
+        let new_coordinates_position = Position { raw: 3, col: 1 };
         actions_system.move_piece(new_coordinates_position);
 
         let new_position: Piece = world.read_model((caller, new_coordinates_position));
 
-        assert!(new_position.position.x == 3, "piece x is wrong");
-        assert!(new_position.position.y == 2, "piece y is wrong");
+        assert!(new_position.position.raw == 3, "piece x is wrong");
+        assert!(new_position.position.col == 1, "piece y is wrong");
         assert!(new_position.is_alive == true, "piece is not alive");
         assert!(new_position.is_king == false, "piece is king");
     }
