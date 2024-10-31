@@ -41,7 +41,7 @@ pub mod actions {
 
             // 1. Move the player's position 10 units in both the x and y direction.
             let new_position = Position {
-                player, vec: Vec2 { x: position.vec.x + 10, y: position.vec.y + 10 }
+                player, vec: Vec2 { x: position.vec.x + 0, y: position.vec.y + 0 }
             };
 
             // Write the new position to the world.
