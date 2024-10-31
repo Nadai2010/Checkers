@@ -4,12 +4,12 @@ import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { addAddressPadding } from "starknet";
 
 import { Models, Schema } from "./bindings.ts";
-import { useDojo } from "./useDojo.tsx";
-import useModel from "./useModel.tsx";
-import { useSystemCalls } from "./useSystemCalls.ts";
+import { useDojo } from "./hooks/useDojo.tsx";
+import useModel from "./hooks/useModel.tsx";
+import { useSystemCalls } from "./hooks/useSystemCalls.ts";
 
 import ControllerButton from "./components/ControllerButton.tsx";
-import Board from "./components/Board"; // Asegúrate de que esta importación esté correcta
+import Board from "./components/Board";
 
 export const useDojoStore = createDojoStore<Schema>();
 
@@ -242,7 +242,6 @@ function App({ sdk }: { sdk: SDK<Schema> }) {
                     </div>
                 </div>
 
-                {/* Aquí se añade el tablero */}
                 <div className="mt-8">
                     <Board
                         position={position ? { vec: { x: position.vec.x, y: position.vec.y } } : null}

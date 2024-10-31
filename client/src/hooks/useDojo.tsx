@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { DojoContext } from "./DojoContext";
+import { DojoContext } from "../DojoContext";
 
 export const useDojo = () => {
     const context = useContext(DojoContext);

@@ -1,23 +1,13 @@
 // ControllerButton.tsx
-import React, { useState, useEffect } from "react";
 import useControllerAccount from "../hooks/useControllerAccount";
-import Checker from "../components/Checker";
 
 const ControllerButton: React.FC = () => {
   const {
-    userAccountController,
     userName,
     isConnected,
     handleConnect,
     handleDisconnect,
   } = useControllerAccount();
-
-  const [isCheckerVisible, setIsCheckerVisible] = useState(false);
-
-  useEffect(() => {
-    // Show Checker component if connected
-    setIsCheckerVisible(isConnected);
-  }, [isConnected]);
 
   return (
     <div>
@@ -35,15 +25,12 @@ const ControllerButton: React.FC = () => {
         <img
           src="https://x.cartridge.gg/favicon-48x48.png"
           alt="User Icon"
-          className="h-8 w-8 mr-1 rounded-full" // Reducir margen derecho
+          className="h-8 w-8 mr-1 rounded-full"
         />
         <span className="text-white flex-grow text-left pl-1" style={{ lineHeight: '40px' }}>
           {isConnected ? userName : "Controller"}
         </span>
       </button>
-
-      {/* Show Checker component if connected */}
-      {isCheckerVisible && <Checker />}
     </div>
   );
 };
