@@ -375,19 +375,19 @@
         "type": "()"
       },
       {
-        "name": "UpLeft",
+        "name": "Left",
         "type": "()"
       },
       {
-        "name": "UpRight",
+        "name": "Right",
         "type": "()"
       },
       {
-        "name": "DownLeft",
+        "name": "Up",
         "type": "()"
       },
       {
-        "name": "DownRight",
+        "name": "Down",
         "type": "()"
       }
     ]
