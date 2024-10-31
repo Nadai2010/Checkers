@@ -19,7 +19,7 @@ pub struct DirectionsAvailable {
 
 #[derive(Copy, Drop, Serde, Debug)]
 #[dojo::model]
-pub struct Position {
+pub struct Piece {
     #[key]
     pub player: ContractAddress,
     pub vec: Vec2,
@@ -55,6 +55,13 @@ impl DirectionIntoFelt252 of Into<Direction, felt252> {
     }
 }
 
+// #[derive(Drop, Serde)]
+// #[dojo::model]
+// struct Piece {
+//     #[key]
+//     pub owner: ContractAddress,
+//     pub position: Vec2,
+// }
 
 #[generate_trait]
 impl Vec2Impl of Vec2Trait {
@@ -72,7 +79,7 @@ impl Vec2Impl of Vec2Trait {
 
 #[cfg(test)]
 mod tests {
-    use super::{Position, Vec2, Vec2Trait};
+    use super::{Vec2, Vec2Trait};
 
     #[test]
     fn test_vec_is_zero() {

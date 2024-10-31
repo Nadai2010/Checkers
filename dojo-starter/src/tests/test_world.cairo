@@ -5,12 +5,12 @@ mod tests {
     use dojo_cairo_test::{spawn_test_world, NamespaceDef, TestResource, ContractDefTrait};
 
     use dojo_starter::systems::actions::{actions, IActionsDispatcher, IActionsDispatcherTrait};
-    use dojo_starter::models::{Position, m_Position, Moves, m_Moves, Direction, Vec2};
+    use dojo_starter::models::{Piece, m_Piece, Moves, m_Moves, Direction, Vec2};
 
     fn namespace_def() -> NamespaceDef {
         let ndef = NamespaceDef {
             namespace: "dojo_starter", resources: [
-                TestResource::Model(m_Position::TEST_CLASS_HASH.try_into().unwrap()),
+                TestResource::Model(m_Piece::TEST_CLASS_HASH.try_into().unwrap()),
                 //TestResource::Model(m_Moves::TEST_CLASS_HASH.try_into().unwrap()),
                 //TestResource::Event(actions::e_Moved::TEST_CLASS_HASH.try_into().unwrap()),
                 TestResource::Contract(
@@ -30,22 +30,22 @@ mod tests {
         let ndef = namespace_def();
         let mut world = spawn_test_world([ndef].span());
 
-        // Test initial position
-        let mut position: Position = world.read_model(caller);
-        assert(position.vec.x == 0 && position.vec.y == 0, 'initial position wrong');
+        // Test initial piece
+        let mut piece: Piece = world.read_model(caller);
+        assert(piece.vec.x == 0 && piece.vec.y == 0, 'initial piece wrong');
 
         // Test write_model_test
-        position.vec.x = 1;
-        position.vec.y = 1;
+        piece.vec.x = 1;
+        piece.vec.y = 1;
 
-        world.write_model_test(@position);
+        world.write_model_test(@piece);
 
-        let position: Position = world.read_model(caller);
-        assert(position.vec.y == 1, 'write_value_from_id failed');
+        let piece: Piece = world.read_model(caller);
+        assert(piece.vec.y == 1, 'write_value_from_id failed');
         // Test model deletion
-        world.erase_model(@position);
-        let position: Position = world.read_model(caller);
-        assert(position.vec.x == 0 && position.vec.y == 0, 'erase_model failed');
+        world.erase_model(@piece);
+        let piece: Piece = world.read_model(caller);
+        assert(piece.vec.x == 0 && piece.vec.y == 0, 'erase_model failed');
     }
     #[test]
     #[available_gas(30000000)]
@@ -59,22 +59,20 @@ mod tests {
         let actions_system = IActionsDispatcher { contract_address };
 
         actions_system.spawn();
-        let initial_position: Position = world.read_model(caller);
+        let initial_position: Piece = world.read_model(caller);
 
-        assert(
-            initial_position.vec.x == 0 && initial_position.vec.y == 0, 'wrong initial position'
-        );
+        assert(initial_position.vec.x == 1 && initial_position.vec.y == 3, 'wrong initial piece');
 
-        let valid_piece_coordinates_vec2 = Vec2 { x: 0, y: 0 };
+        let valid_piece_coordinates_vec2 = Vec2 { x: 1, y: 3 };
         let can_choose_piece = actions_system.can_choose_piece(valid_piece_coordinates_vec2);
         assert(can_choose_piece, 'can_choose_piece failed');
 
-        let new_coordinates_vec2 = Vec2 { x: 1, y: 1 };
+        let new_coordinates_vec2 = Vec2 { x: 2, y: 4 };
         actions_system.move(new_coordinates_vec2);
 
-        let new_position: Position = world.read_model(caller);
+        let new_position: Piece = world.read_model(caller);
 
-        assert!(new_position.vec.x == 1, "position x is wrong");
-        assert!(new_position.vec.y == 1, "position y is wrong");
+        assert!(new_position.vec.x == 2, "piece x is wrong");
+        assert!(new_position.vec.y == 4, "piece y is wrong");
     }
 }
