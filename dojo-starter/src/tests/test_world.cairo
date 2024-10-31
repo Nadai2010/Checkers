@@ -5,7 +5,7 @@ mod tests {
     use dojo_cairo_test::{spawn_test_world, NamespaceDef, TestResource, ContractDefTrait};
 
     use dojo_starter::systems::actions::{actions, IActionsDispatcher, IActionsDispatcherTrait};
-    use dojo_starter::models::{Piece, m_Piece, Vec2};
+    use dojo_starter::models::{Piece, m_Piece, Position};
 
     fn namespace_def() -> NamespaceDef {
         let ndef = NamespaceDef {
@@ -39,8 +39,8 @@ mod tests {
         // assert(piece00.vec.x == 0 && piece00.vec.y == 0, 'initial piece wrong');
         // Test write_model_test
 
-        let piece_vec = Vec2 { x: 1, y: 1 };
-        let piece = Piece { player: caller, vec: piece_vec, is_king: true, is_alive: true };
+        let piece_vec = Position { x: 1, y: 1 };
+        let piece = Piece { player: caller, position: piece_vec, is_king: true, is_alive: true };
 
         world.write_model_test(@piece);
 
@@ -66,18 +66,18 @@ mod tests {
         let actions_system = IActionsDispatcher { contract_address };
 
         actions_system.spawn();
-        let valid_piece_vec = Vec2 { x: 2, y: 1 };
-        let initial_piece_position: Piece = world.read_model((caller, valid_piece_vec));
+        let valid_piece_position = Position { x: 2, y: 1 };
+        let initial_piece_position: Piece = world.read_model((caller, valid_piece_position));
 
         assert(
-            initial_piece_position.vec.x == 2 && initial_piece_position.vec.y == 1,
+            initial_piece_position.position.x == 2 && initial_piece_position.position.y == 1,
             'wrong initial piece'
         );
         assert(initial_piece_position.is_king == false, 'wrong initial piece');
         assert(initial_piece_position.is_alive == true, 'wrong initial piece');
 
-        let invalid_piece_vec = Vec2 { x: 7, y: 7 };
-        let can_choose_piece = actions_system.can_choose_piece(invalid_piece_vec);
+        let invalid_piece_position = Position { x: 7, y: 7 };
+        let can_choose_piece = actions_system.can_choose_piece(invalid_piece_position);
         assert(!can_choose_piece, 'should be false');
     }
     #[test]
@@ -92,26 +92,25 @@ mod tests {
         let actions_system = IActionsDispatcher { contract_address };
 
         actions_system.spawn();
-        let valid_piece_vec = Vec2 { x: 2, y: 1 };
-        let initial_piece_position: Piece = world.read_model((caller, valid_piece_vec));
+        let valid_piece_position = Position { x: 2, y: 1 };
+        let initial_piece_position: Piece = world.read_model((caller, valid_piece_position));
 
         assert(
-            initial_piece_position.vec.x == 2 && initial_piece_position.vec.y == 1,
+            initial_piece_position.position.x == 2 && initial_piece_position.position.y == 1,
             'wrong initial piece'
         );
         assert(initial_piece_position.is_king == false, 'wrong initial piece');
         assert(initial_piece_position.is_alive == true, 'wrong initial piece');
 
-        let valid_piece_vec = Vec2 { x: 2, y: 1 };
-        let can_choose_piece = actions_system.can_choose_piece(valid_piece_vec);
+        let can_choose_piece = actions_system.can_choose_piece(valid_piece_position);
         assert(can_choose_piece, 'can_choose_piece failed');
-        let new_coordinates_vec2 = Vec2 { x: 3, y: 2 };
-        actions_system.move(new_coordinates_vec2);
+        let new_coordinates_position = Position { x: 3, y: 2 };
+        actions_system.move_piece(new_coordinates_position);
 
-        let new_position: Piece = world.read_model((caller, new_coordinates_vec2));
+        let new_position: Piece = world.read_model((caller, new_coordinates_position));
 
-        assert!(new_position.vec.x == 3, "piece x is wrong");
-        assert!(new_position.vec.y == 2, "piece y is wrong");
+        assert!(new_position.position.x == 3, "piece x is wrong");
+        assert!(new_position.position.y == 2, "piece y is wrong");
         assert!(new_position.is_alive == true, "piece is not alive");
         assert!(new_position.is_king == false, "piece is king");
     }

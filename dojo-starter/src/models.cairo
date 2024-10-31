@@ -6,28 +6,27 @@ pub struct Piece {
     #[key]
     pub player: ContractAddress,
     #[key]
-    pub vec: Vec2,
+    pub position: Position,
     pub is_king: bool,
     pub is_alive: bool,
 }
 
 #[derive(Copy, Drop, Serde, IntrospectPacked, Debug)]
-pub struct Vec2 {
+pub struct Position {
     pub x: u32,
     pub y: u32
 }
 
-
 #[generate_trait]
-impl Vec2Impl of Vec2Trait {
-    fn is_zero(self: Vec2) -> bool {
+impl PositionImpl of PositionTrait {
+    fn is_zero(self: Position) -> bool {
         if self.x - self.y == 0 {
             return true;
         }
         false
     }
 
-    fn is_equal(self: Vec2, b: Vec2) -> bool {
+    fn is_equal(self: Position, b: Position) -> bool {
         self.x == b.x && self.y == b.y
     }
 }
@@ -46,5 +45,4 @@ impl Vec2Impl of Vec2Trait {
 //         assert(position.is_equal(Vec2 { x: 420, y: 0 }), 'not equal');
 //     }
 // }
-
 
