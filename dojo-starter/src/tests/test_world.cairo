@@ -65,9 +65,12 @@ mod tests {
             initial_position.vec.x == 0 && initial_position.vec.y == 0, 'wrong initial position'
         );
 
-        let coordinates_vec2 = Vec2 { x: 1, y: 1 };
+        let valid_piece_coordinates_vec2 = Vec2 { x: 0, y: 0 };
+        let can_choose_piece = actions_system.can_choose_piece(valid_piece_coordinates_vec2);
+        assert(can_choose_piece, 'can_choose_piece failed');
 
-        actions_system.move(coordinates_vec2);
+        let new_coordinates_vec2 = Vec2 { x: 1, y: 1 };
+        actions_system.move(new_coordinates_vec2);
 
         let new_position: Position = world.read_model(caller);
 

@@ -6,6 +6,7 @@ use dojo_starter::models::Vec2;
 #[starknet::interface]
 trait IActions<T> {
     fn spawn(ref self: T);
+    fn can_choose_piece(ref self: T, coordinates_vec2: Vec2) -> bool;
     fn move(ref self: T, coordinates_vec2: Vec2);
 }
 
@@ -43,23 +44,22 @@ pub mod actions {
 
             // Write the new moves to the world.
         //world.write_model(@moves);
-
-            //         fn choose_piece(ref self: ContractState, piece_position: Position) {
-        //             // Get the default world.
-        //             let mut world = self.world(@"dojo_starter");
-
-            //             // Get the address of the current caller, possibly the player's address.
-        //             let player = get_caller_address();
-
-            //             // Get the player's current position from the world.
-        //             let mut position: Position = world.read_model(player);
-
-            //             // Check if the piece is in the player's position.
-        //             if position.vec.x == piece_position.vec.x
-        //                 && position.vec.y == piece_position.vec.y { // TODO: Choose the
-        //                 piece.
-        //             }
         }
+        //
+
+        fn can_choose_piece(ref self: ContractState, coordinates_vec2: Vec2) -> bool {
+            let mut world = self.world(@"dojo_starter");
+
+            // Get the address of the current caller, possibly the player's address.
+            let player = get_caller_address();
+
+            // Get the player's current position from the world.
+            let mut position: Position = world.read_model(player);
+
+            // Check if the piece is in the player's position.
+            position.vec.x == coordinates_vec2.x && position.vec.y == coordinates_vec2.y
+        }
+
         // Implementation of the move function for the ContractState struct.
         fn move(ref self: ContractState, coordinates_vec2: Vec2) {
             // Get the address of the current caller, possibly the player's address.
