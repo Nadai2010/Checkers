@@ -24,11 +24,11 @@ Single steps quick start
    ```
 
    ```bash
-   sozo migrate apply
+   sozo migrate
    ```
 
    ```bash
-   torii --world 0xc82dfe2cb4f8a90dba1e88dfa24578aeb1c19152d51e3c7cf413be6d65d9e --allowed-origins "*"
+   torii --world 0x06171ed98331e849d6084bf2b3e3186a7ddf35574dd68cab4691053ee8ab69d7 --allowed-origins "*"
    ```
 
 ### Terminal 3:
