@@ -106,7 +106,7 @@ mod tests {
         assert(can_choose_piece, 'should be true');
     }
     #[test]
-    fn test_move() {
+    fn test_move_down_left() {
         let caller = starknet::contract_address_const::<0x0>();
 
         let ndef = namespace_def();
@@ -135,6 +135,39 @@ mod tests {
 
         assert!(new_position.position.raw == 3, "piece x is wrong");
         assert!(new_position.position.col == 0, "piece y is wrong");
+        assert!(new_position.is_alive == true, "piece is not alive");
+        assert!(new_position.is_king == false, "piece is king");
+    }
+    #[test]
+    fn test_move_down_right() {
+        let caller = starknet::contract_address_const::<0x0>();
+
+        let ndef = namespace_def();
+        let mut world = spawn_test_world([ndef].span());
+
+        let (contract_address, _) = world.dns(@"actions").unwrap();
+        let actions_system = IActionsDispatcher { contract_address };
+
+        actions_system.spawn();
+        let valid_piece_position = Position { raw: 2, col: 1 };
+        let initial_piece_position: Piece = world.read_model((caller, valid_piece_position));
+
+        assert(
+            initial_piece_position.position.raw == 2 && initial_piece_position.position.col == 1,
+            'wrong initial piece'
+        );
+        assert(initial_piece_position.is_king == false, 'wrong initial piece');
+        assert(initial_piece_position.is_alive == true, 'wrong initial piece');
+
+        let can_choose_piece = actions_system.can_choose_piece(valid_piece_position);
+        assert(can_choose_piece, 'can_choose_piece failed');
+        let new_coordinates_position = Position { raw: 3, col: 2 };
+        actions_system.move_piece(new_coordinates_position);
+
+        let new_position: Piece = world.read_model((caller, new_coordinates_position));
+
+        assert!(new_position.position.raw == 3, "piece x is wrong");
+        assert!(new_position.position.col == 2, "piece y is wrong");
         assert!(new_position.is_alive == true, "piece is not alive");
         assert!(new_position.is_king == false, "piece is king");
     }

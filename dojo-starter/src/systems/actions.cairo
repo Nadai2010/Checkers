@@ -162,18 +162,26 @@ pub mod actions {
 
                 // Check forward-left diagonal (down-left)
                 if piece_col > 0 {
-                    let target_position = Position { raw: piece_raw + 1, col: piece_col - 1 };
+                    let target_down_left_position = Position {
+                        raw: piece_raw + 1, col: piece_col - 1
+                    };
 
                     // Try to read a piece at the target position
                     // then the square is empty and the move is valid
-                    let target_square: Piece = world.read_model((piece.player, target_position));
-                    println!("target_square: {:?}", target_square);
+                    let target_down_left_square: Piece = world
+                        .read_model((piece.player, target_down_left_position));
+                    println!("target_square: {:?}", target_down_left_square);
                     // If the target square is empty, return true
-                    if target_square.is_alive == false {
-                        return true;
+                    if target_down_left_square.is_alive == false {
+                        let target_down_right_position = Position {
+                            raw: piece_raw + 1, col: piece_col + 1
+                        };
+                        let target_down_right_square: Piece = world
+                            .read_model((piece.player, target_down_right_position));
+                        if target_down_right_square.is_alive == false {
+                            return true;
+                        }
                     }
-                    // If the target square is occupied, return false
-                    return false;
                 }
             }
 
