@@ -165,7 +165,6 @@ pub mod actions {
                     let target_position = Position { raw: piece_raw + 1, col: piece_col - 1 };
 
                     // Try to read a piece at the target position
-                    // If no piece exists at this position (i.e., if read_model returns an error),
                     // then the square is empty and the move is valid
                     let target_square: Piece = world.read_model((piece.player, target_position));
                     println!("target_square: {:?}", target_square);

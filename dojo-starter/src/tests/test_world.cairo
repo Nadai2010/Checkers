@@ -128,13 +128,13 @@ mod tests {
 
         let can_choose_piece = actions_system.can_choose_piece(valid_piece_position);
         assert(can_choose_piece, 'can_choose_piece failed');
-        let new_coordinates_position = Position { raw: 3, col: 1 };
+        let new_coordinates_position = Position { raw: 3, col: 0 };
         actions_system.move_piece(new_coordinates_position);
 
         let new_position: Piece = world.read_model((caller, new_coordinates_position));
 
         assert!(new_position.position.raw == 3, "piece x is wrong");
-        assert!(new_position.position.col == 1, "piece y is wrong");
+        assert!(new_position.position.col == 0, "piece y is wrong");
         assert!(new_position.is_alive == true, "piece is not alive");
         assert!(new_position.is_king == false, "piece is king");
     }
